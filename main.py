@@ -1,50 +1,109 @@
 import socket
-from verabose import make_response,render_template
+from verabose import make_response, render_template
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(("localhost", 8080))
-server.listen()
 
-print("Server running on http://localhost:8080")
+class Request:
+    def __init__(self, raw_request):
 
-while True:
-    client, addr = server.accept()
+        self.raw = raw_request
 
-    request = client.recv(1024).decode()
+        first_line = raw_request.split("\r\n")[0]
 
-    if not request:
-        client.close()
-        continue
+        self.method = first_line.split(" ")[0]
+        self.path = first_line.split(" ")[1]
 
-    first_line = request.split("\r\n")[0]
+        parts = raw_request.split("\r\n\r\n")
+        self.body = parts[1] if len(parts) > 1 else ""
 
-    method = first_line.split(" ")[0]
-    path = first_line.split(" ")[1]
 
-    parts = request.split("\r\n\r\n")
-    body = parts[1] if len(parts) > 1 else ""
+class WebServer:
 
-    print(f"Method: {method}")
-    print(f"Path: {path}")
-    print(f"Body: {body}")
-    print("-" * 50)
+    def __init__(self, host="localhost", port=8080):
 
-    if method == "GET" and path == "/":
-        response = make_response(render_template("index.html"))
+        self.host = host
+        self.port = port
 
-    elif method == "GET" and path == "/about":
-        response = make_response(render_template("about.html"))
-
-    elif method == "POST" and path == "/login":
-        response = make_response(
-            f"""
-            <h1>Login Received</h1>
-            <p>{body}</p>
-            """
+        self.server = socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
         )
 
-    else:
-        response = make_response("<h1>404 Not Found</h1>")
+    def start(self):
 
-    client.sendall(response.encode())
-    client.close()
+        self.server.bind(
+            (self.host, self.port)
+        )
+
+        self.server.listen()
+
+        print(
+            f"Server running on http://{self.host}:{self.port}"
+        )
+
+        while True:
+
+            client, addr = self.server.accept()
+
+            raw_request = client.recv(
+                1024
+            ).decode()
+
+            if not raw_request:
+                client.close()
+                continue
+
+            request = Request(raw_request)
+
+            print(f"Method: {request.method}")
+            print(f"Path: {request.path}")
+            print(f"Body: {request.body}")
+            print("-" * 50)
+
+            response = self.handle_request(
+                request
+            )
+
+            client.sendall(
+                response.encode()
+            )
+
+            client.close()
+
+    def handle_request(self, request):
+
+        if (
+            request.method == "GET"
+            and request.path == "/"
+        ):
+            return make_response(
+                render_template("index.html")
+            )
+
+        elif (
+            request.method == "GET"
+            and request.path == "/about"
+        ):
+            return make_response(
+                render_template("about.html")
+            )
+
+        elif (
+            request.method == "POST"
+            and request.path == "/login"
+        ):
+            return make_response(
+                f"""
+                <h1>Login Received</h1>
+                <p>{request.body}</p>
+                """
+            )
+
+        return make_response(
+            "<h1>404 Not Found</h1>"
+        )
+
+
+if __name__ == "__main__":
+
+    app = WebServer()
+    app.start()
