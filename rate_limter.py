@@ -1,35 +1,35 @@
-mport time
+import time
 
 
 class RateLimiter:
 
-        def __init__(self, limit=5, window=60):
-                    self.limit = limit
-                            self.window = window
-                                    self.requests = {}
+    def __init__(self, limit=5, window=60):
+        self.limit = limit
+        self.window = window
+        self.requests = {}
 
 
-                                        def allow(self, client_ip):
+    def allow(self, client_ip):
 
-                                                    now = time.time()
+        now = time.time()
 
-                                                            if client_ip not in self.requests:
-                                                                            self.requests[client_ip] = []
-
-
-                                                                                    # remove expired requests
-                                                                                            self.requests[client_ip] = [
-                                                                                                                request_time
-                                                                                                                            for request_time in self.requests[client_ip]
-                                                                                                                                        if now - request_time < self.window
-                                                                                                                                                ]
+        if client_ip not in self.requests:
+            self.requests[client_ip] = []
 
 
-                                                                                                    # limit exceeded
-                                                                                                            if len(self.requests[client_ip]) >= self.limit:
-                                                                                                                            return False
+        
+        self.requests[client_ip] = [
+            request_time
+            for request_time in self.requests[client_ip]
+            if now - request_time < self.window
+        ]
 
 
-                                                                                                                                self.requests[client_ip].append(now)
+        
+        if len(self.requests[client_ip]) >= self.limit:
+            return False
 
-                                                                                                                                        return True
+
+        self.requests[client_ip].append(now)
+
+        return True

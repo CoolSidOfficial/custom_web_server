@@ -1,7 +1,6 @@
 import socket
 from verabose import make_response, render_template
-
-
+from rate_limiter import RateLimiter
 class Request:
     def __init__(self, raw_request):
 
@@ -22,6 +21,11 @@ class WebServer:
 
         self.host = host
         self.port = port
+        self.rate_limiter = RateLimiter(
+            limit=5,
+            window=60
+        )
+
 
         self.server = socket.socket(
             socket.AF_INET,

@@ -1,9 +1,8 @@
-                            )
-n Web Server From Scratch
+# Web Server From Scratch
 
 A simple HTTP web server built from scratch using Python sockets.
 
-This project was created to understand how web servers and frameworks work under the hood by implementing HTTP request handling manually without using Flask, FastAPI, Django, or any other web framework.
+This project was created to understand how web servers and frameworks work internally by implementing HTTP request handling manually without using **Flask**, **FastAPI**, **Django**, or any other web framework.
 
 ## Features
 
@@ -12,28 +11,33 @@ This project was created to understand how web servers and frameworks work under
 * GET request support
 * POST request support
 * Basic routing
-* Request parsing
+* HTTP request parsing
 * Custom response generation
 * No external dependencies
 
 ## Project Structure
 
-```text
+```
 .
 ├── server.py
 ├── verbose.py
 └── README.md
 ```
 
+## Files
+
 ### server.py
 
 Handles:
 
 * Socket creation
+* Server binding
 * Listening for connections
-* Request parsing
+* Accepting client requests
+* HTTP request parsing
 * Route matching
-* Response sending
+* Response generation
+* Sending HTTP responses
 
 ### verbose.py
 
@@ -47,11 +51,19 @@ Contains helper functions for creating HTTP responses.
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ```
 
+Creates a TCP socket that allows the server to communicate with clients.
+
+---
+
 ### 2. Bind to a Port
 
 ```python
 server.bind(("localhost", 8080))
 ```
+
+Assigns the server to a specific address and port.
+
+---
 
 ### 3. Listen for Connections
 
@@ -59,17 +71,25 @@ server.bind(("localhost", 8080))
 server.listen()
 ```
 
+Waits for incoming client connections.
+
+---
+
 ### 4. Accept Requests
 
 ```python
 client, addr = server.accept()
 ```
 
+Accepts a client connection and starts processing the request.
+
+---
+
 ### 5. Parse HTTP Requests
 
 Example request:
 
-```http
+```
 GET /about HTTP/1.1
 Host: localhost:8080
 ```
@@ -78,22 +98,27 @@ The server extracts:
 
 * HTTP Method
 * Route Path
+* Request Headers
 * Request Body
+
+---
 
 ### 6. Generate HTTP Responses
 
 Example response:
 
-```http
+```
 HTTP/1.1 200 OK
 Content-Type: text/html
 
 <h1>Hello World</h1>
 ```
 
-## Routes
+The server manually builds and sends HTTP responses.
 
-### GET /
+# Routes
+
+## GET /
 
 Returns:
 
@@ -101,7 +126,9 @@ Returns:
 <h1>Home Page</h1>
 ```
 
-### GET /about
+---
+
+## GET /about
 
 Returns:
 
@@ -109,7 +136,9 @@ Returns:
 <h1>About Page</h1>
 ```
 
-### POST /login
+---
+
+## POST /login
 
 Accepts form data and returns the received payload.
 
@@ -127,7 +156,15 @@ Response:
 <h1>Login Received</h1>
 ```
 
-## Running the Server
+# Running The Server
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+```
+
+Run:
 
 ```bash
 python server.py
@@ -135,19 +172,19 @@ python server.py
 
 Open:
 
-```text
+```
 http://localhost:8080
 ```
 
-## Example Requests
+# Example Requests
 
-### GET Request
+## GET Request
 
 ```bash
 curl http://localhost:8080
 ```
 
-### POST Request
+## POST Request
 
 ```bash
 curl -X POST \
@@ -155,7 +192,7 @@ curl -X POST \
 http://localhost:8080/login
 ```
 
-## Learning Goals
+# Learning Goals
 
 This project demonstrates:
 
@@ -163,10 +200,12 @@ This project demonstrates:
 * Socket programming
 * HTTP protocol basics
 * Request/response lifecycle
-* Route handling
-* Foundation of web frameworks
+* Routing systems
+* How web frameworks work internally
 
-## Future Improvements
+# Future Improvements
+
+Planned improvements:
 
 * Request object abstraction
 * Response object abstraction
@@ -179,9 +218,6 @@ This project demonstrates:
 * Flask-like decorators
 * Mini web framework architecture
 
-## License
+# License
 
-MIT
-
-
-
+MIT License
