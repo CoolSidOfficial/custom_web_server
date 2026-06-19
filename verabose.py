@@ -5,3 +5,6 @@ def make_response(body):
         "\r\n"
         f"{body}"
     )
+def render_template(filename):
+    with open(f"templates/{filename}", "r") as f:
+        return f.read()

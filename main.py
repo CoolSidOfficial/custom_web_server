@@ -1,5 +1,5 @@
 import socket
-from verabose import make_response
+from verabose import make_response,render_template
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(("localhost", 8080))
@@ -30,10 +30,10 @@ while True:
     print("-" * 50)
 
     if method == "GET" and path == "/":
-        response = make_response("<h1>Home Page</h1>")
+        response = make_response(render_template("index.html"))
 
     elif method == "GET" and path == "/about":
-        response = make_response("<h1>About Page</h1>")
+        response = make_response(render_template("about.html"))
 
     elif method == "POST" and path == "/login":
         response = make_response(
