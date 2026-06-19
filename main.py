@@ -22,7 +22,6 @@ if __name__=="__main__":
     else:
         response = make_response("<h1>404 Not Found</h1>")
 
-    client_socket.sendall(response.encode())
-    print(request)
     client.sendall(response.encode())
+    print(request)
     client.close()
