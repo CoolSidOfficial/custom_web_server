@@ -3,9 +3,19 @@ import socket
 server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 server.bind(("localhost",8080))
 server.listen()
-print("Listening on 8080 port")
-client_socket,address=server.accept()
-print(f"connected by {address}")
-client_socket.close()
-server.close()
+print("Server running on http://localhost:8080")
+while True:
+    client,addr=server.accept()
+    request=client.recv(1024).decode()
+    print(request)
+    response = (
+                "HTTP/1.1 200 OK\r\n"
+                    "Content-Type: text/html\r\n"
+                        "\r\n"
+                            "<h1>Hello World</h1>"
+                            )
+
+    client.send(response.encode())
+    client.close()
+
 
