@@ -207,16 +207,115 @@ This project demonstrates:
 
 Planned improvements:
 
-* Request object abstraction
-* Response object abstraction
+## Planned Improvements
+
+The goal of this project is to gradually evolve this basic HTTP server into a lightweight web framework by adding features commonly found in modern backend frameworks.
+
+### Core Architecture
+
+* Improve request handling with a dedicated `Request` object
+* Add a `Response` object for managing:
+
+  * Status codes
+  * Headers
+  * Cookies
+  * Content types
+* Create a cleaner server lifecycle and component-based architecture
+
+### Routing System
+
 * Dynamic route parameters
-* Middleware support
-* Template rendering
-* Static file serving
-* Multithreading
-* Async I/O
-* Flask-like decorators
-* Mini web framework architecture
+
+Example:
+
+```
+/users/<id>
+/posts/<post_id>
+```
+
+* Route registration system
+* Flask-like decorator-based routing
+
+Example:
+
+```python
+@app.route("/")
+def home():
+    return "Hello World"
+```
+
+### Middleware System
+
+Add support for request processing layers:
+
+* Logging middleware
+* Authentication middleware
+* Rate limiting middleware
+* Request validation
+
+Example flow:
+
+```
+Request
+   |
+Middleware
+   |
+Router
+   |
+Controller
+   |
+Response
+```
+
+### Template Engine
+
+Improve HTML rendering with:
+
+* Template variables
+* Dynamic HTML generation
+* Template inheritance
+
+Example:
+
+```html
+<h1>Hello {{ username }}</h1>
+```
+
+### Static File Handling
+
+Support serving:
+
+* CSS files
+* JavaScript files
+* Images
+* Other assets
+
+Example:
+
+```
+/static/style.css
+/static/app.js
+```
+
+### Performance Improvements
+
+* Multithreaded request handling
+* Async I/O support
+* Better connection management
+* Improved request parsing
+
+### Advanced Web Features
+
+* Cookie handling
+* Session management
+* JSON API responses
+* File uploads
+* WebSocket support
+
+### Final Goal
+
+Transform the project from a basic socket-based HTTP server into a lightweight educational web framework that demonstrates how frameworks like Flask and Express work internally.
+
 
 # License
 
